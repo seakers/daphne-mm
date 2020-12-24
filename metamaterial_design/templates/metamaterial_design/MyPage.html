@@ -1,0 +1,92 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+<!-- {% block title %}
+{% endblock %} -->
+
+{% block scripts %}
+	<!-- Import stylesheet from local folder  -->
+	<!-- <link rel="stylesheet" type="text/css" href="./styles/stylesheet.css"/> not working -->
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+	<style>
+		.otree-title{
+		    padding-top: 20px;
+		}
+		.page-header{
+			margin: 0 0 0px;
+		}
+		.hide: { display: none; visibility: hidden }
+	</style>
+
+{% endblock %}
+
+{% block content %}		
+	
+	<!-- Tradespace Panel -->
+	<div class="panel panel-default">
+	  	<div class="panel-heading">Tradespace Visualization</div>
+	  	<div id="tsViz" style="width:700;height:400px;"></div>
+	</div>
+
+	<div class="row">
+		<!-- Design Vizualization Panel -->
+		<div class="col-md">
+			<div class="panel panel-default">
+				<div class="panel-heading">Design Visualization</div>
+		  		<div id="desViz" style="width:400px;height:350px;float:center"></div>
+			</div>
+		</div>
+		<!-- Design Creation Panel -->
+		<div class="col-md">
+			<div class="panel panel-default">
+				<div class="panel-heading">Create New Metamaterial</div>
+		  		<div id="desCreat" style="width:400px;height:350px;">
+		  			<p style="text-align: center;"> <em> Click to Add & Double Click to Remove </em></p>
+		  		</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Feature Space Visualization -->
+	<div class="panel panel-default">
+	  	<div class="panel-heading">Feature-space Visualization</div>
+	  	<div id="featViz" style="width:700;height:400px;"></div>
+	</div>
+
+	
+	<script> 
+		// data
+		var data = js_vars.data;
+		var nodes = js_vars.nodes;
+		var edges = js_vars.edges;
+		num_features={{Constants.num_features}};
+		num_ticks={{Constants.num_ticks}};
+
+		var desViz = document.getElementById('desViz');
+		var tsViz = document.getElementById('tsViz');
+		var featViz = document.getElementById('featViz');
+
+		{% include "metamaterial_design/scripts/utils.js" %}
+
+		window.onload = function () { 
+			{% include "metamaterial_design/components/tradespace_visualization.js" %} 
+			{% include "metamaterial_design/components/design_visualization.js" %}
+			{% include "metamaterial_design/components/design_creation.js" %}
+			{% include "metamaterial_design/components/feature_visualization.js" %}
+		}
+	</script>
+
+	{% next_button %}
+
+{% endblock %}

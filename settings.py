@@ -7,6 +7,12 @@ SESSION_CONFIGS = [
     #    num_demo_participants=3,
     #    app_sequence=['public_goods', 'payment_info']
     # ),
+      dict(
+       name='metamaterial_design',
+       display_name="Metamaterial Design - HMI",
+       num_demo_participants=3,
+       app_sequence=['metamaterial_design']
+    ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
