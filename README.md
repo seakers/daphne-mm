@@ -1,2 +1,2 @@
 # daphne-mm
- Daphne backend and frontend for metamaterial design problem
+ Daphne-style backend and frontend for metamaterial design problem
