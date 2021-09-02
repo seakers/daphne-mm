@@ -1,0 +1,103 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Questionnaire 2
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+	<input type="hidden" name="answers2" value="">
+
+	<p> Please answer the following questions to the best of your understanding. </p>
+
+	<!-- Design Comparison Tests -->
+	<p class="h2 text-center" > Identify Effects of Features </p>
+	{% for name in feature_names %}
+		<b>Question {{ forloop.counter }}</b>
+			<div class="row">
+				<!-- Test figures -->
+				<div class="col">
+					<div class="panel panel-default">
+						<div id='dfi_test{{ forloop.counter0 }}' style="width:250px;height:150px;align:center"></div>
+					</div>
+				</div>
+				<!-- Test text -->
+				<div class="col">
+					<p>This metamaterial has <b>Low {{ name }}</b>. Assuming all other features are same, </p>
+					<p>
+						How does vertical stiffness change when {{ name }} is increased to High?<br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_dfi_test{{ forloop.counter0 }}_0" required>Increases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_dfi_test{{ forloop.counter0 }}_0" required>Decreases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_dfi_test{{ forloop.counter0 }}_0" required>Minimal change</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_dfi_test{{ forloop.counter0 }}_0" required checked>Not sure</label>
+					</p>
+					<p>
+						How does volume fraction change when {{ name }} is increased to High?<br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_dfi_test{{ forloop.counter0 }}_1" required >Increases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_dfi_test{{ forloop.counter0 }}_1" required >Decreases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_dfi_test{{ forloop.counter0 }}_1" required>Minimal change</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_dfi_test{{ forloop.counter0 }}_1" required checked>Not sure</label>
+					</p>
+				</div>
+			</div>
+	{% endfor %}
+
+
+	<script>
+		{% include "scripts/utils.js" %}
+
+		// variables
+		var images_dfi_test = js_vars.images_dfi_test
+		n_dfi_tests = images_dfi_test.length
+
+		window.onload = function () {
+
+			{% include "components/design_feature_identification_test.js" %}
+
+			//Listen to the submit button
+			document.getElementById("next-btn").addEventListener("click", onclickSubmit, false);
+			function onclickSubmit(){
+				let answers = $( "input[name^=ans]:checked" );
+				answers = Array.from(answers)
+				answers = JSON.stringify(answers.map( function (a, i) { return a.value }))
+
+				document.getElementsByName('answers2')[0].value=answers
+				console.log(document.getElementsByName('answers2')[0].value)
+				setTimeout(
+			    	function () {
+			        	document.getElementById("form").submit(); 
+			    	},
+			    	1*1000 // 60 seconds
+				);
+			}
+		}
+
+		function check_me(item) {
+			var str = $(item).attr("name");
+			str = str.replace(/^\s+|\s+$/g,"");
+			var options = document.getElementsByName(str);
+			options[0].checked = false;
+			options[1].checked = false;
+			options[2].checked = false;
+			options[3].checked = false;
+
+			var ans = $(item).attr("value");
+			options[ans].checked = true;
+		}
+
+	</script>
+
+	<button type="button" class="btn btn-primary" id="next-btn">Next</button>
+
+{% endblock %}

@@ -1,0 +1,220 @@
+{% load otree static %}
+    <p class="h4 text-center"> I. Scenario	</p>
+	<p>
+		Imagine you are a material scientist in an engineering firm. You specialize in designing mechanical metamaterials for high-strength light-weight components. Mechanical metamaterials are artificial structures with mechanical properties defined by their structure. 
+	</p>
+	<p>
+		To help you with your job, your firm recently acquired a decision support tool. The purpose of using this design support tool is twofold:
+		<ul>
+			<li>
+				To help you learn about designing mechanical metamaterials and understanding their properties, and 
+			</li>
+			<li>
+				To create feasible metamaterials with high stiffness and low volume weight.
+			</li>
+		</ul>
+	</p>
+	<p>
+		Accordingly, you have two goals in this experiment. The first goal is to learn as much as possible about the problem at hand (i.e., maximize your score by answering as many questions correctly as possible). The second goal is to maximize the stiffness and minimize volume fraction of mechanical materials as much as possible while making sure metamaterials are feasible.
+	</p>
+	<br>
+	<p class="h4 text-center"> II. Tool </p>
+	<p> The tool focuses on a specific type of mechanical metamaterial that has following properties:
+		<ul>
+			<li> A unit cell structure repeats in a 2D plane to create a metamaterial, as seen from Figure below. </li>
+			<li> The unit cell structure is made of multiple links joining nodes in a 3 x 3 grid. Not all links are necessary. </li>
+			<figure class="figure">
+			  	<img src="{% static 'automation_expt/metamaterial.png' %}" class="figure-img img-fluid rounded">
+			  	<figcaption class="figure-caption"> Full metamaterial design (left) and a unit cell structure within it (right)</figcaption>
+			</figure>
+
+			<li>Every metamaterial is rated using two objectives, vertical stiffness (relates to strength) and volume fraction (relates to weight). 
+				<br>
+				Additionally, there is a feasibility constraint that the metamaterial should satisfy. Desired metamaterials maximize stiffness and minimize volume fraction. All metrics are displayed as adimensional quantities normalized between 0 and 1.
+
+			</li>
+			<table class="table">
+			  <tbody>
+			    <tr>
+			      <th scope="row"> Vertical Stiffness </th>
+			      <td> Relates to the amount of vertical force required to expand or contract a metamaterial by unit distance vertically </td>
+			      <td> The higher the better </td>
+			    </tr>
+			    <tr>
+			      <th scope="row"> Volume Fraction </th>
+			      <td> The volume of unit cell structure divided by total volume (including missing links and empty space in the unit area) </td>
+			      <td> The smaller the better </td>
+			    </tr>
+			    <tr>
+			      <th scope="row"> Feasibility (Constraint) </th>
+			      <td> No two links in a unit cell should intersect, except at nodes. Also, the resulting metamaterial should be fully connected (i.e. it cannot have disconnected subcomponents). </td>
+			      <td> Full feasibility is desired. </td>
+			    </tr>
+			  </tbody>
+			</table>
+		</ul>
+	</p>
+	<br>
+	<p> The tool offers the following functionalities.
+		<ul>
+			<li> <b> Tradespace Visualization </b> <br>
+				You can explore the dataset of existing metamaterials. The blue dotted line represents a set of optimal designs, also called <b>the Pareto front</b>. A design belongs to the Pareto front if there exists no other design in the set that has better stiffness for the same or lower volume fraction. For example, the metamaterial design shown here with the red plus symbol is dominated by the Pareto designs on the blue dotted line.
+				<br>
+				<b>Only feasible metamaterials are considered part of pareto front.</b>
+			</li>
+			<figure class="figure">
+			  	<img src="{% static 'automation_expt/tradespace.gif' %}" class="figure-img img-fluid rounded">
+			</figure>
+
+			<li> <b> Metamaterial Visualization </b><br>
+				You can select a metamaterial by clicking on the tradespace plot. Upon clicking, the selected point is marked by big red plus sign (<span style="color: transparent;  text-shadow: 0 0 0 red;">&#10133;</span>) and the corresponding metamaterial along with relevant information appears in the bottom left window.
+			</li>
+
+			<li> <b> Change Design </b><br>
+				You can change the selected metamaterial or create your own metamaterial using "Change Design" feature.
+				<b>Press "Test Metamaterial"</b> to evaluate the design objectives at the new metamaterial.
+			</li>
+				<figure class="figure">
+			  		<img src="{% static 'automation_expt/design_creation.gif' %}" class="figure-img img-fluid rounded">
+				</figure>
+
+			<li> <b> Change Features </b><br>
+				In addition to changing and creating your own metamaterials manually, the tool offers a functionality to change predefined features. Once you select a metamaterial from the tradespace plot, the features of the selected metamaterial appear in the "Change Features" window. You can change values of any feature you like (patterns contained by many good designs) and the tool will generate a new metamaterial with new feature values. 
+			</li>
+			<figure class="figure">
+			  	<img src="{% static 'automation_expt/feature_creation.gif' %}" class="figure-img img-fluid rounded">
+			</figure>
+
+			<li> <em> Automated Feature Changes </em> 
+				Finally, the tool offers a functionality to change <em>5</em> specific features automatically. To use this functionality, you will need to select the amount of "overall change" you desire in features of the selected design. For the selected design and overall change, the tool will automatically suggest optimal changes in the feature values and generate a new metamaterial. 
+			</li>
+			<figure class="figure">
+			  	<img src="{% static 'automation_expt/design_generation.gif' %}" class="figure-img img-fluid rounded">
+			</figure>			
+		</ul>
+	 </p>
+	 <br>
+	<br>
+
+	<p class="h4 text-center"> III. Feature Definitions </p>
+	<p> 
+		The tool uses a total of <b>10 predefined features</b> for metamaterials. Five <b>randomly selected</b> features are used in the "Change Feature" functionality and the rest are used in the "Automated Feature Change" functionality. All features take value between -2.5 (low) to 2.5 (high).  
+	</p>
+	<p>
+		<table class="table">
+		<tbody>
+			<tr>
+				<th scope="row"> Feature 1 </th>
+				    <td> An abstract feature </td>
+			</tr>
+			<tr>
+				<th scope="row"> Feature 2 </th>
+				    <td> An abstract feature </td>
+			</tr>
+			<tr>
+				<th scope="row"> Feature 3 </th>
+				    <td> An abstract feature </td>
+			</tr>
+			<tr>
+				<th scope="row"> Feature 4 </th>
+				    <td> An abstract feature </td>
+			</tr>
+			<tr>
+				<th scope="row"> Feature 5 </th>
+				    <td> An abstract feature </td>
+			</tr>
+			<tr>
+				<th scope="row"> Horizontal Lines </th>
+				    <td> Proportional to the number of horizonal links in the unit cell structure. </td>
+			</tr>
+			<tr>
+				<th scope="row"> Vertical Lines </th>
+				    <td> Proportional to the number of vertical links in the unit cell structure. </td>
+			</tr>
+			<tr>
+				<th scope="row"> Diagonals </th>
+				    <td> Proportional to the number of diagonal links in the unit cell structure. </td>
+			</tr>
+			<tr>
+				<th scope="row"> Triangles </th>
+				    <td> Proportional to the number of triangles in the unit cell structure. </td>
+			</tr>
+			<tr>
+				<th scope="row"> Three Stars </th>
+				    <td> Proportional to the number of nodes with at least three links attached to it. </td>
+			</tr>
+		</tbody>
+		</table>
+	</p>
+
+	 <p class="h4 text-center"> IV. Sample Questions </p>
+	 <br>
+	 <p> As part of the experiment, you will answer some questions testing your knowledge about this problem before and after using the tool. Below are some examples of questions you may get. </p>
+	 <b>Remember to note your findings during the experiment so that you can answer test questions correctly later.</b>
+	 <figure class="figure">
+			  	<img src="{% static 'automation_expt/sample_question1.JPG' %}" class="figure-img img-fluid rounded">
+			  	<figcaption class="figure-caption">Sample Question 1</figcaption>
+			</figure>
+			<figure class="figure">
+			  	<img src="{% static 'automation_expt/sample_question2.JPG' %}" class="figure-img img-fluid rounded">
+			  	<figcaption class="figure-caption">Sample Question 2</figcaption>
+			</figure>
+	<br>
+	<br>
+	 <p class="h4 text-center"> IV. Experiment Protocol </p>
+	 <table class="table">
+	  <tbody>
+	    <tr>
+	      <th scope="row"> Instructions (this part) </th>
+	      <td> Please read the instructions carefully. </td>
+	      <td> 5 minutes </td>
+	    </tr>
+	     <tr>
+	      <th scope="row"> Pretest questionnaire </th>
+	      <td> Answer 16 questions for assessing your prior knowledge of mechanical metamaterials </td>
+	      <td> 5 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Task 1 </th>
+	      <td> Test "Change Design" functionality </td>
+	      <td> 7 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Questionnaire 1 </th>
+	      <td> Answer 16 questions for assessing new things you learned from Task 1. </td>
+	      <td> 5 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Task 2 </th>
+	      <td> Test "Change Features" functionality</td>
+	      <td> 7 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Questionnaire 2 </th>
+	      <td> Answer 10 questions for assessing new things you learned from Task 2. </td>
+	      <td> 5 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Task 3 </th>
+	      <td> Test "Automated Feature Changes" functionality</td>
+	      <td> 7 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Questionnaire 3 </th>
+	      <td> Answer 10 questions for assessing new things you learned from Task 3. </td>
+	      <td> 5 minutes </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Survey </th>
+	      <td> Complete a short survey about self-assessment of your knowledge </td>
+	      <td> -- </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Results </th>
+	      <td> Cross-check your responses against correct answers to see how you performed in the questionnaires. Also, review the performance of new metamaterials you created. </td>
+	      <td> -- </td>
+	    </tr>
+	  </tbody>
+	</table>
+
+

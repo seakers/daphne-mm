@@ -1,0 +1,76 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Survey
+{% endblock %}
+
+{% block scripts %}
+
+	<style>
+
+	</style>
+
+{% endblock %}
+
+{% block content %}
+	
+	<input type="hidden" name="answers4" value="">
+	<p>Please fill out the following survey. </p>
+	<table class="table">
+	  	<thead>
+	    <tr>
+	      <th scope="col"></th>
+	      	{% for choice in choices_sa_test %}
+	      		<th scope="col"> {{ choice }}</th>
+	      	{% endfor %}
+	    </tr>
+	  	</thead>
+	 	 <tbody>
+		{% for question in questions_sa_test %}
+		    <tr>
+		      <th scope="row"> {{ question.text }} </th>
+		      		{% for choice in choices_sa_test %}
+	      				<td><label class="radio-inline"><input type="radio" onchange="check_me(this)" value="{{ forloop.counter0 }}" name="ans_sa_test{{ question.id }}" required></label></td>
+	      			{% endfor %}
+		    </tr>
+		{% endfor %}
+		</tbody>
+	</table>
+	
+	<script>
+		var n_choices = {{ n_choices }}
+		window.onload = function () {
+			//Listen to the submit button
+			document.getElementById("next-btn").addEventListener("click", onclickSubmit, false);
+			function onclickSubmit(){
+				let answers = $( "input[name^=ans]:checked" );
+				answers = Array.from(answers)
+				answers = JSON.stringify(answers.map( function (a, i) { return a.value }))
+
+				document.getElementsByName('answers4')[0].value=answers
+				console.log(document.getElementsByName('answers4')[0].value)
+				setTimeout(
+			    	function () {
+			        	document.getElementById("form").submit(); 
+			    	},
+			    	1*1000 // 60 seconds
+				);
+			}
+		}
+
+		function check_me(item) {
+			var str = $(item).attr("name");
+			str = str.replace(/^\s+|\s+$/g,"");
+			var options = document.getElementsByName(str);
+			for (let i=0; i<n_choices; i++) {
+				options[i].checked = false
+			}
+			var ans = Number($(item).attr("value"));
+			options[ans].checked = true;
+		}
+	</script>
+
+	<button type="button" class="btn btn-primary" id="next-btn">Next</button>
+
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Task 1: Design Exploration
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+	<style>
+		/*.otree-title{
+			padding-top: 0px;
+		}
+		.page-header{
+			margin: 0 0 0px;
+		}*/
+		.hide: { display: none; visibility: hidden }
+	</style>
+
+{% endblock %}
+
+{% block content %}
+	
+	<!-- Tradespace Panel -->
+	<div class="panel panel-default">
+		<div class="panel-heading">Tradespace Visualization</div>
+		<div id="tsViz" style="width:700;height:400px;"></div>
+	</div>
+
+	<div class="row">
+		<!-- Design Vizualization Panel -->
+		<div class="col-md">
+			<div class="panel panel-default">
+				<div class="panel-heading">Metamaterial Visualization - Selected Design <span style="color: transparent;  text-shadow: 0 0 0 red; ">&#10133;</span> </div>
+				<div id="desViz" style="width:400px;height:350px;float:center"></div>
+			</div>
+		</div>
+		<!-- Design Creation Panel -->
+		<div class="col-md">
+			<div class="panel panel-default">
+				<div class="panel-heading">Create New Metamaterial Unit Cell</div>
+				<button id="clearAll" type="button" class="btn btn-secondary btn-sm" style="float:right; position:relative; top:30px; right:10px">Clear All</button>
+				<div id="desCreat" style="width:400px;height:350px;">
+					<p style="text-align:center"> <em> Click to Add Link & Double-Click to Remove Link </em></p>
+				</div>
+				<button id="testDesign" type="button" class="btn btn-primary" style="float:right; position:relative; bottom:40px; right:10px">Test Design</button>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Feature Space Visualization -->
+	<!-- <div class="panel panel-default">
+		<div class="panel-heading">Feature-space Exploration</div>
+		<div id="featViz" style="width:900;height:500px;"></div>
+		<button id="resetAll" type="button" class="btn btn-secondary btn-sm" style="float:left; position:relative; bottom:40px; left:140px">Reset All</button>
+		<button id="generateDesign" type="button" class="btn btn-primary" style="float:right; position:relative; bottom:40px; right:10px">Generate New Design & Test</button>
+	</div> -->
+
+
+	<br>
+	<br>
+
+	<div>
+		<p class="h2"> Instructions </p>
+		<button id="showInstructions" type="button" class="btn btn-secondary btn-sm">Show</button>
+	</div>
+	<div id="instructions">
+		{% include instruction_url %}
+	</div>
+	
+	<script> 
+		// Task id
+		activeTaskId = 'design-tab'
+
+		// variables
+		{% include "scripts/vars.js" %}
+
+		// utilities
+		{% include "scripts/utils.js" %}
+		{% include "scripts/helpers.js" %}
+
+		window.onload = function () {
+			{% include "components/timer.js" %} 
+			{% include "components/tradespace_visualization.js" %}
+			{% include "components/design_visualization.js" %}
+			change_selected_design(selected_curve, selected_point)
+			plot_selected_design(selected_curve, selected_point)
+			{% include "components/design_creation.js" %}
+			{% include "components/event_listeners.js" %}
+			{% include "components/instructions.js" %}
+
+		}
+
+		// New data from responses
+		function liveRecv(input) {
+			if (input['message']=='clean image') {
+				update_design_visualization(input['image'], '')
+
+			} else if (input['message']=='test design') {
+				response_data = input['response_data']
+				n_response = response_data.obj1.length
+				data['is_pareto_response' + player_id.toFixed(0)] = input['is_pareto_response']  // New pareto information for historic data
+				// Update plots in the tradespace
+				update_tradespace_response(response_data)
+				update_pareto_response(data, response_data)
+				// Update the design visualization tab
+				selected_curve = 1	// Display response
+				selected_point = response_data.obj1.length-1
+				change_selected_design(selected_curve, selected_point);
+				plot_selected_design(selected_curve, selected_point)
+			}
+		}
+		// Use liveSend to call live methods in python
+		// liveSend()
+
+
+	</script>
+
+	<!-- {% next_button %} -->
+
+{% endblock %}

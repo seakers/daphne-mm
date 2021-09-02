@@ -1,0 +1,45 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Instructions
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+	{% include instruction_url %}
+
+	<br>
+	<p> The Next button will activate after a 5 min timeout.</p>
+
+	{% next_button %}
+	
+	<script>
+		var instr_duration = {{ instr_duration }}
+		window.onload = function () {
+			var next_button = document.getElementsByClassName("otree-btn-next")[0];
+			next_button.disabled = true;
+			
+			setTimeout(
+			    function () {
+			        alert("If you have finished reading the instructions, press Next button at the bottom of this page. The instructions will be also accessible from next pages.");
+			        next_button.disabled = false;
+			    },
+			    instr_duration*1000 // 60 seconds
+			);
+		}
+
+	</script>
+	
+
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Pre-Test Questions
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+	<input type="hidden" name="answers0" value="">
+
+	<p>
+		Recall that a unit cell structure of metamaterial is made of multiple truss elements, each joining a pair of nodes in a 3 x 3 nodes grid. A unit structure is replicated horizontally and vertically to form a complete material.
+		<br>
+		<br>
+		<b> Verical stiffness </b> of a metamaterial structure is defined as the vertical force required to expand or contract the structure by unit distance vertically. To normalize the stiffness values between 0 and 1, we divide them by a constant (Young's Modulus of material).
+		<br>
+		<br>
+		<b> Volume fraction </b> is the ratio of the volume of truss elements and the total volume of unit structure (including empty space).
+	</p>
+	<br>
+	<p> Please answer the following questions to the best of your understanding. </p>
+
+	<!-- Design Comparison  -->
+	<p class="h2 text-center"> Compare Designs </p>
+	{% for id in ids_pretest %}
+		<b>Question {{ id }}</b>
+			<div class="row">
+				<!-- Test figures -->
+				<div class="col">
+					<div class="panel panel-default">
+						<div class="panel-heading">Metamaterial A</div>
+						<div id='dc_test{{ id }}_0' style="width:250px;height:150px;align:center"></div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="panel panel-default">
+						<div class="panel-heading">Metamaterial B</div>
+						<div id='dc_test{{ id }}_1' style="width:250px;height:150px;align:center"></div>
+					</div>
+				</div>
+				<!-- Test text -->
+				<div class="col">
+					<p>
+						Which metamaterial has higher vertical stiffness?<br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_pretest{{ id }}_0" required>A</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_pretest{{ id }}_0" required >B</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_pretest{{ id }}_0" required > Minimal difference </label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_pretest{{ id }}_0" required checked>Not Sure</label>
+					</p>
+					<p>
+						Which metamaterial has higher volume fraction?<br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_pretest{{ id }}_1" required >A</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_pretest{{ id }}_1" required >B</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_pretest{{ id }}_1" required > Minimal difference </label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_pretest{{ id }}_1" required checked>Not Sure</label>
+					</p>
+				</div>
+			</div>
+	{% endfor %}
+
+	<script>
+
+		// Read images
+		var images_dc_test = js_vars.images_dc_test
+		n_dc_tests = images_dc_test.length/2
+
+		// Loading javascripts
+		{% include "scripts/utils.js" %}
+
+		window.onload = function () {
+			
+			{% include "components/design_comparison_test.js" %}
+
+			//Listen to the submit button
+			document.getElementById("next-btn").addEventListener("click", onclickSubmit, false);
+			function onclickSubmit(){
+				let answers = $( "input[name^=ans]:checked" );
+				answers = Array.from(answers)
+				answers = JSON.stringify(answers.map( function (a, i) { return a.value }))
+
+				document.getElementsByName('answers0')[0].value=answers
+
+				setTimeout(
+			    	function () {
+			        	document.getElementById("form").submit(); 
+			    	},
+			    	1*1000 // 60 seconds
+				);
+			}
+		}
+
+		function check_me(item) {
+			var str = $(item).attr("name");
+			str = str.replace(/^\s+|\s+$/g,"");
+			var options = document.getElementsByName(str);
+			options[0].checked = false;
+			options[1].checked = false;
+			options[2].checked = false;
+			options[3].checked = false;
+
+			var ans = $(item).attr("value");
+			options[ans].checked = true;
+		}
+
+	</script>
+
+	<button type="button" class="btn btn-primary" id="next-btn">Next</button>
+
+{% endblock %}

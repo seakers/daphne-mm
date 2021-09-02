@@ -1,0 +1,84 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+ <br>
+
+    <p class="h4"> I. Scenario	</p>
+	<p>
+		Imagine you are a material scientist in an engineering firm. You specialize in designing mechanical metamaterials for high-strength light-weight components. To help you with your job, your firm recently acquired a decision support tool. Your job is to test this tool and complete a questionnaire afterwards to determine your knowledge of metamaterials. Therefore, your goal is to maximize learning from this tool and maximize your score by answering as many questions correctly as possible.
+	</p>
+
+	<p class="h4"> II. Tool </p>
+	<p> The tool focuses on a specific type of mechanical metamaterial that has following properties:
+		<ul>
+			<li> A unit structure repeats in a 2D plane to create a metamaterial, as seen from Fig. 1. </li>
+			<li> The unit structure is made of multiple links joining nodes in a 3 x 3 grid. Not all links are necessary. </li>
+			<figure class="figure">
+			  	<img src="{% static 'metamaterial.jpg' %}" class="figure-img img-fluid rounded">
+			  	<figcaption class="figure-caption">Metamaterial design and a unit structure within it</figcaption>
+			</figure>
+
+			<li> Every metamaterial is rated using two objectives, stiffness (relates to strength) and volume fraction (relates to weight). 
+				 Additionally, there is a constraint of feasibility that metamaterial should satisfy. A desired metamaterial has <emph> maximum stiffness and minimum volume fraction while maintaining full feasibility </emph> (i.e. equal to 1) . All metrics are normalized between 0 and 1.
+			</li>
+			<table class="table">
+			  <tbody>
+			    <tr>
+			      <th scope="row"> Stiffness </th>
+			      <td> Relates to how much force a metamaterial can withstand per unit expansion or contraction before breaking </td>
+			      <td> The higher the better </td>
+			    </tr>
+			    <tr>
+			      <th scope="row"> Volume Fraction </th>
+			      <td> The volume of unit structure divided by total volume (including missing links and empty space in the unit area) </td>
+			      <td> The smaller the better </td>
+			    </tr>
+			    <tr>
+			      <th scope="row"> Feasibility (Constraint) </th>
+			      <td> No two links should intersect, except at nodes. Also, metamaterial should be fully connected (i.e. cannot have disconnected subcomponents). </td>
+			      <td> Feasibility = 1 is desired. Every violation of the constraint reduces feasibility by 0.1. </td>
+			    </tr>
+			  </tbody>
+			</table>
+		</ul>
+	</p>
+
+	<p> The tool offers many functionalities.
+		<ul>
+			<li> You can explore a dataset of old metamaterials. </li>
+			<figure class="figure">
+			  	<img src="{% static 'tradespace.gif' %}" class="figure-img img-fluid rounded">
+			</figure>
+			<li> You can create new metamaterial and evaluate its stiffness and volume fraction. </li>
+			<figure class="figure">
+			  	<img src="{% static 'design_creation.gif' %}" class="figure-img img-fluid rounded">
+			</figure>
+			<li> The tool also offers an artificial intelligence (AI) agent to generate new metamaterial automatically. You can select features you like and the AI agent will generate a new metamaterial with those features.  </li>
+			<figure class="figure">
+			  	<img src="{% static 'feature_exploration.gif' %}" class="figure-img img-fluid rounded">
+			</figure>
+		</ul>
+	 </p>
+
+	 <p class="h4"> III. Experiment Protocol </p>
+	 <table class="table">
+	  <tbody>
+	    <tr>
+	      <th scope="row"> Instructions (this part) </th>
+	      <td> Please read the instructions carefully. </td>
+	      <td> ~ 5 min </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Tool Testing </th>
+	      <td> You will test the tool and all its functionalities. Your goal is to maximize the learning about how the objectives (stiffness and volume fraction) and constraints change with respect to different designs and their features. </td>
+	      <td> ~ 25 min </td>
+	    </tr>
+	    <tr>
+	      <th scope="row"> Questionnaire </th>
+	      <td> You will be shown pairs of memtamaterials on the screen and you will answer questions such as which metamaterial has higher stiffness and how does stiffness changes with a particular feature. Your job is to maximize the number of questions you answer correctly.</td>
+	      <td> ~ 5 min </td>
+	    </tr>
+	  </tbody>
+	</table>
+
+

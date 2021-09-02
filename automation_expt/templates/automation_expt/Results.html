@@ -1,0 +1,157 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    End Page: Results
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+	<p> Thank you for your participation. You may check the results of your experiment below. </p>
+	<p class="h2 text-center"> Overall Improvement </p>
+	<!-- Tradespace Panel -->
+	<div id="tsViz" style="width:700;height:400px;"></div>
+	<p> Difference in the pareto front of new designs and the parto front of old designs if any is shown as shaded red area. </p>
+	
+	<p class="h2 text-center"> Test Results </p>
+	<p> You answered <b>{{ n_correct }}</b> out of <b>{{ n_questions }}</b> questions correctly. </p>
+	<p> Below is the record of your responses. Green color marks correct responses. Red color marks incorrect responses by you.</p>
+	<!-- Results of Test 1 -->
+
+	<!-- Design Comparison  -->
+	<p class="h4 text-center"> Compare Designs (Questionnaire 1)  </p>
+	{% for id in ids_dc_test %}
+		<b>Question {{ id }}</b>
+			<div class="row">
+				<!-- Test figures -->
+				<div class="col">
+					<div class="panel panel-default">
+						<div class="panel-heading">Metamaterial A</div>
+						<div id='dc_test{{ id }}_0' style="width:250px;height:150px;align:center"></div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="panel panel-default">
+						<div class="panel-heading">Metamaterial B</div>
+						<div id='dc_test{{ id }}_1' style="width:250px;height:150px;align:center"></div>
+					</div>
+				</div>
+				<!-- Test text -->
+				<div class="col">
+					<p>
+						Which metamaterial has higher vertical stiffness?<br>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=0 name="ans_dc_test{{ id }}_0" disabled >A</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=1 name="ans_dc_test{{ id }}_0" disabled >B</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=2 name="ans_dc_test{{ id }}_0" disabled >Minimal difference</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=3 name="ans_dc_test{{ id }}_0" disabled >Not Sure</label>
+					</p>
+					<p>
+						Which metamaterial has higher volume fraction?<br>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=0 name="ans_dc_test{{ id }}_1" disabled >A</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=1 name="ans_dc_test{{ id }}_1" disabled >B</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=2 name="ans_dc_test{{ id }}_1" disabled >Minimal difference</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=3 name="ans_dc_test{{ id }}_1" disabled >Not Sure</label>
+					</p>
+				</div>
+			</div>
+	{% endfor %}
+
+	<!-- Results of Test 2 -->
+	<!-- Feature Indentification Tests -->
+	<p class="h4 text-center" > Identify Effects of Features (Questionnaire 2 and 3) </p>
+	{% for name in feature_names %}
+		<b>Question {{ forloop.counter }}</b>
+			<div class="row">
+				<!-- Test figures -->
+				<div class="col">
+					<div class="panel panel-default">
+						<div id='dfi_test{{ forloop.counter0 }}' style="width:250px;height:150px;align:center"></div>
+					</div>
+				</div>
+				<!-- Test text -->
+				<div class="col">
+					<p>This metamaterial has <b>Low {{ name }}</b>. Assuming all other features are same, </p>
+					<p>
+						How does vertical stiffness change when {{ name }} is increased to High?<br>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=0 name="ans_fi_test{{ forloop.counter0 }}_0" disabled>Increases</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=1 name="ans_fi_test{{ forloop.counter0 }}_0" disabled>Decreases</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=2 name="ans_fi_test{{ forloop.counter0 }}_0" disabled>Minimal change</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=3 name="ans_fi_test{{ forloop.counter0 }}_0" disabled>Not Sure</label>
+					</p>
+					<p>
+						How does volume fraction change when {{ name }} is increased to High?<br>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=0 name="ans_fi_test{{ forloop.counter0 }}_1" disabled >Increases</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=1 name="ans_fi_test{{ forloop.counter0 }}_1" disabled >Decreases</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=2 name="ans_fi_test{{ forloop.counter0 }}_1" disabled >Minimal change</label>
+						<label class="radio-inline"><input type="radio" onload="check_me(this)" value=3 name="ans_fi_test{{ forloop.counter0 }}_1" disabled>Not Sure</label>
+					</p>
+				</div>
+			</div>
+	{% endfor %}
+
+
+	<script>
+
+		// variables
+		{% include "scripts/vars.js" %}
+		// Learning test related variables
+		// Read images
+		var images_dc_test = js_vars.images_dc_test
+		n_dc_tests = images_dc_test.length/2
+		var images_dfi_test = js_vars.images_dfi_test
+		n_dfi_tests = images_dfi_test.length
+
+		// utilities
+		{% include "scripts/utils.js" %}
+		{% include "scripts/helpers.js" %}
+
+		window.onload = function () {
+			{% include "components/tradespace_visualization.js" %}
+			{% include "components/design_comparison_test.js" %}
+			{% include "components/design_feature_identification_test.js" %}
+		}
+
+		// Highlight Player's Answers
+		player_answers1 = js_vars.dc_test_player_answers
+		test_answers = js_vars.dc_test_answers
+		let answer_divs = $( "input[name^='ans_d']" );
+		answer_divs = Array.from(answer_divs)
+		for (let i=0; i<player_answers1.length; i++) {
+			player_ans = player_answers1[i]
+			ans_divs = answer_divs.slice(4*i, 4*(i+1))
+			ans_divs[player_ans].checked=true
+			ans_divs[test_answers[i]].labels[0].className = "radio-inline label-success"
+			if (player_ans !== test_answers[i]) {
+				ans_divs[player_ans].labels[0].className = "radio-inline label-danger"
+			}
+		}
+
+		player_answers2 = js_vars.dfi_test_player_answers
+		dfi_test_answers = js_vars.dfi_test_answers
+		answer_divs = $( "input[name^='ans_f']" );
+		answer_divs = Array.from(answer_divs)
+		for (let i=0; i<player_answers2.length; i++) {
+			player_ans = player_answers2[i]
+			ans_divs = answer_divs.slice(4*i, 4*(i+1))
+			ans_divs[player_ans].checked=true
+			ans_divs[dfi_test_answers[i]].labels[0].className = "radio-inline label-success"
+			if (player_ans !== dfi_test_answers[i]) {
+				ans_divs[player_ans].labels[0].className = "radio-inline label-danger"
+			}
+		}
+
+	</script>
+
+
+{% endblock %}
+
+

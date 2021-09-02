@@ -1,0 +1,133 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+	Task: {{ task }}
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+	<!-- Tensorflowjs -->
+	<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+	<style>
+		.hide: { display: none; visibility: hidden }
+		.otree-body {
+			max-width:1000px
+		}
+	</style>
+
+{% endblock %}
+
+{% block content %}
+
+	<!-- Tradespace Panel -->
+	<div class="panel panel-default">
+		<div class="panel-heading">Tradespace Visualization</div>
+		<div id="tsViz" style="width:700;height:400px;"></div>
+	</div>
+
+	<div class="row">
+		<!-- Design Vizualization Panel -->
+		<div class="col-md">
+			<div class="panel panel-default">
+				<div class="panel-heading"> Metamaterial Visualization - Selected <span style="color: transparent;  text-shadow: 0 0 0 red; ">&#10133;</span></div>
+				<div id="desViz" style="width:400px;height:350px;float:center"></div>
+			</div>
+		</div>
+		<!-- Design Creation Panel -->
+		<div class="col-md">
+			<!-- Tabs -->
+			<div class="panel panel-default">
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="design-tab" data-toggle="tab" href="#design" role="tab" aria-controls="design" aria-selected="true"> Change Design </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="feature-tab" data-toggle="tab" href="#feature" role="tab" aria-controls="feature" aria-selected="false"> Change Features </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="generator-tab" data-toggle="tab" href="#generator" role="tab" aria-controls="generator" aria-selected="false"> Auto Feature Changes </a>
+					</li>
+				</ul>
+				<!-- Tabs Content -->
+				<div class="tab-content" id="myTabContent">
+					<!-- Design tab -->
+					<div class="tab-pane fade show active" id="design" role="tabpanel" aria-labelledby="design-tab">
+						<div id="desCreat" style="width:400px;height:350px;">
+						<p style="text-align:center"> <em> Click to Add Link & Double-Click to Remove Link </em></p>
+						</div>
+						<button id="clearAll" type="button" class="btn btn-secondary btn-sm" style="float:left; position:relative; bottom:50px; left:50px"> Clear All </button>
+					</div>
+					<!-- Feature tab -->
+					<div class="tab-pane fade" id="feature" role="tabpanel" aria-labelledby="feature-tab">
+							<!-- Feature Space Visualization -->
+						<div id="featCreat" style="width:400;height:350px;"></div>
+						<button id="resetAll" type="button" class="btn btn-secondary btn-sm" style="float:left; position:relative; bottom:50px; left:50px"> Reset All </button>
+					</div>
+					<!-- Design generator tab -->
+					<div class="tab-pane fade" id="generator" role="tabpanel" aria-labelledby="generator-tab">
+							<!-- Feature Space Visualization -->
+							<div id="desGen" style="width:400;height:50px;"></div>
+							<div id="AutomatedSuggestionsTable" style="width:350;height:300px;margin-right:25px;margin-left:25px;"></div>
+							<button id="resetEta" type="button" class="btn btn-secondary btn-sm" style="float:left; position:relative; bottom:50px; left:50px">Reset</button>
+
+					</div>
+				</div>
+				<button id="testDesign" type="button" class="btn btn-primary" style="float:right; position:relative; bottom:50px; right:50px">Test Metamaterial</button>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<p class="h2"> Instructions </p>
+		<button id="showInstructions" type="button" class="btn btn-secondary btn-sm">Show</button>
+	</div>
+	<div id="instructions">
+		{% include instruction_url %}
+	</div>
+	
+	<script>
+		// variables
+		{% include "scripts/vars.js" %}
+
+		// utilities
+		{% include "scripts/utils.js" %}
+		{% include "scripts/helpers.js" %}
+
+		window.onload = function () {
+
+			// tensorflow models and functions
+			{% include "scripts/generator.js" %}
+			{% include "scripts/tfjs_models.js" %}
+			{% include "scripts/tf_helpers.js" %}
+
+			// Design components
+			{% include "components/timer.js" %} 
+			{% include "components/tradespace_visualization.js" %}
+			{% include "components/design_visualization.js" %}
+			{% include "components/design_creation.js" %}
+			{% include "components/feature_creation.js" %}
+			{% include "components/design_generation.js" %}
+			{% include "components/instructions.js" %}
+
+			{% include "components/event_listeners.js" %}
+
+			// Change selected design and Update the design visualization tab
+			change_selected_design(selected_curve, selected_point)
+			plot_design(selected_curve, selected_point, 'selected')
+		}
+
+		{% include "scripts/liveRecv.js" %}
+
+		// activeTaskId = "design-tab"
+
+	</script>
+
+{% endblock %}

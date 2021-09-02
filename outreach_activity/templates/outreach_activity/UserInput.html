@@ -1,0 +1,28 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Please enter your name.
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+{% endblock %}
+
+{% block content %}
+	
+	<form action="/action_page.php">
+	  <label for="user_firstname">First name:</label>
+	  <input type="text" id="user_firstname" name="user_firstname"><br><br>
+	  <label for="user_lastname">Last name:</label>
+	  <input type="text" id="user_lastname" name="user_lastname"><br><br>
+	</form>
+
+	<p>Click the "Next" button to continue.</p>
+
+
+	{% next_button %}
+
+{% endblock %}

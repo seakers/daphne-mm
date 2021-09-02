@@ -1,0 +1,153 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Questionnaire 2
+{% endblock %}
+
+{% block scripts %}
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+	<!-- Plotting scripts -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+	<input type="hidden" name="answers2" value="">
+
+	<p> Please answer the following questions to the best of your understanding. </p>
+
+	<!-- Feature Indentification Tests -->
+	<p class="h2 text-center" > Part I. Identify Features </p>
+	{% for id in ids_fi_test %}
+		<b>Question {{ id }}</b>
+			<div class="row">
+			<!-- Test figures -->
+				<div class="col">
+					<div class="panel panel-default">
+						<div class="panel-heading">Feature</div>
+						<div id='fi_test{{ id }}_0' style="width:500px;height:40px;align:center"></div>
+					</div>
+				</div>
+				<!-- Test text -->
+				<div class="col">
+					<p>
+						How does vertical stiffness change when this feature is changed from left to right?<br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_fi_test{{ id }}_0" required>Increases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_fi_test{{ id }}_0" required>Decreases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_fi_test{{ id }}_0" required>Minimal change</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_fi_test{{ id }}_0" required checked>Not sure</label>
+					</p>
+					<p>
+						How does volume fraction change when this feature is changed from left to right?<br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_fi_test{{ id }}_1" required >Increases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_fi_test{{ id }}_1" required >Decreases</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_fi_test{{ id }}_1" required>Minimal change</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_fi_test{{ id }}_1" required checked>Not sure</label>
+					</p>
+				</div>
+			</div>
+	{% endfor %}
+
+	<!-- Feature Comparison  -->
+	<p class="h2 text-center"> Part II. Compare Features </p>
+	{% for id in ids_fc_test %}
+		<b>Question {{ id }}</b>
+				<div class="row">
+					<!-- Test figures -->
+					<div class="col">
+						<div class="panel panel-default">
+							<div class="panel-heading">Feature A</div>
+							<div id='fc_test{{ id }}_0' style="width:500px;height:40px;align:center"></div>
+						</div>
+					</div>
+					<!-- Test text -->
+					<div class="col">
+						Which feature has a stronger effect on vertical stiffness? <br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_fc_test{{ id }}_0" required>A</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_fc_test{{ id }}_0" required>B</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_fc_test{{ id }}_0" required>Similar effect</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_fc_test{{ id }}_0" required checked>Not sure</label>
+					</div>
+				</div>
+				<div class="row">
+					<!-- Test figures -->
+					<div class="col">
+						<div class="panel panel-default">
+							<div class="panel-heading">Feature B</div>
+							<div id='fc_test{{ id }}_1' style="width:500px;height:40px;align:center"></div>
+						</div>
+					</div>
+					<!-- Test text -->
+					<div class="col">
+						Which feature has a stronger effect on volume fraction? <br>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=0 name="ans_fc_test{{ id }}_1" required >A</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=1 name="ans_fc_test{{ id }}_1" required >B</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=2 name="ans_fc_test{{ id }}_1" required >Similar effect</label>
+						<label class="radio-inline"><input type="radio" onchange="check_me(this)" value=3 name="ans_fc_test{{ id }}_1" required checked>Not sure</label>
+					</div>
+				</div>
+				<br>
+				<br>
+
+	{% endfor %}
+
+	<script>
+		// variables
+		{% include "scripts/vars.js" %}
+		var images_fc_test = js_vars.images_fc_test
+		n_fc_tests = images_fc_test.length/2
+
+		var images_fi_test = js_vars.images_fi_test
+		n_fi_tests = images_fi_test.length
+
+		// utilities
+		{% include "scripts/utils.js" %}
+		{% include "scripts/helpers.js" %}
+
+
+		window.onload = function () {
+
+			{% include "components/feature_comparison_test.js" %}
+			{% include "components/feature_identification_test.js" %}
+
+			//Listen to the submit button
+			document.getElementById("next-btn").addEventListener("click", onclickSubmit, false);
+			function onclickSubmit(){
+				let answers = $( "input[name^=ans]:checked" );
+				answers = Array.from(answers)
+				answers = JSON.stringify(answers.map( function (a, i) { return a.value }))
+
+				document.getElementsByName('answers2')[0].value=answers
+				console.log(document.getElementsByName('answers2')[0].value)
+				setTimeout(
+			    	function () {
+			        	document.getElementById("form").submit(); 
+			    	},
+			    	1*1000 // 60 seconds
+				);
+			}
+		}
+
+		function check_me(item) {
+			var str = $(item).attr("name");
+			str = str.replace(/^\s+|\s+$/g,"");
+			var options = document.getElementsByName(str);
+			options[0].checked = false;
+			options[1].checked = false;
+			options[2].checked = false;
+			options[3].checked = false;
+
+			var ans = $(item).attr("value");
+			options[ans].checked = true;
+		}
+
+	</script>
+
+	<button type="button" class="btn btn-primary" id="next-btn">Next</button>
+
+{% endblock %}
